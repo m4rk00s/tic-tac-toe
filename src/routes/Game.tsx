@@ -1,11 +1,11 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LetterX from "../components/icons/LetterX";
-import OutlinedLetterX from "../components/icons/OutlinedLetterX";
-import LetterO from "../components/icons/LetterO";
-import OutlinedLetterO from "../components/icons/OutlinedLetterO";
-import Logo from "../components/icons/Logo";
-import Restart from "../components/icons/Restart";
+import IconLetterX from "../components/icons/LetterX";
+import IconLetterO from "../components/icons/LetterO";
+import IconLogo from "../components/icons/Logo";
+import IconRestart from "../components/icons/Restart";
+import Result from "../components/Result";
+import Restart from "../components/Restart";
 
 type Grid = [
   Player?,
@@ -19,13 +19,13 @@ type Grid = [
   Player?
 ];
 
-type Player = "X" | "O";
+export type Player = "X" | "O";
 
 interface State {
   user: Player;
   turn: Player;
   grid: Grid;
-  winner: Player[];
+  winner: (Player | undefined)[];
 }
 
 type Action =
@@ -38,8 +38,16 @@ interface Props {
 }
 
 export default function Game(props: Props) {
+  const [visibilityRestartModal, setVisibilityRestartModal] = useState(false);
   const [state, dispatch] = useReducer(reducer, props.user, init);
   const navigate = useNavigate();
+
+  function isFinish(grid: Grid) {
+    return (
+      calculateWinner(grid) !== undefined ||
+      grid.every((tile) => tile !== undefined)
+    );
+  }
 
   function calculateWinner(grid: Grid): Player | undefined {
     const lines = [
@@ -59,6 +67,7 @@ export default function Game(props: Props) {
         return grid[a];
       }
     }
+
     return undefined;
   }
 
@@ -82,21 +91,18 @@ export default function Game(props: Props) {
           ),
         } as State;
       case "restart":
+        setVisibilityRestartModal(false);
         return {
           ...state,
           turn: init(props.user).turn,
           grid: init(props.user).grid,
         } as State;
       case "next-round":
-        let winner = calculateWinner(state.grid);
-
-        if (winner === undefined) return state;
-
         return {
           ...state,
           turn: init(props.user).turn,
           grid: init(props.user).grid,
-          winner: state.winner.concat([winner]),
+          winner: state.winner.concat([calculateWinner(state.grid)]),
         } as State;
       default:
         throw new Error();
@@ -105,25 +111,41 @@ export default function Game(props: Props) {
 
   return (
     <>
-      {/* shadow-drop */}
-      <div className="hidden inset-0 absolute z-10 h-full w-full bg-black mix-blend-normal opacity-50"></div>
+      {isFinish(state.grid) ? (
+        <Result
+          user={props.user}
+          winner={calculateWinner(state.grid)}
+          onClickQuit={() => navigate("/")}
+          onClickNextRound={() => dispatch({ type: "next-round" })}
+        />
+      ) : (
+        <></>
+      )}
 
-      {/* main */}
+      {visibilityRestartModal ? (
+        <Restart
+          onClickCancel={() => setVisibilityRestartModal(false)}
+          onClickYes={() => dispatch({ type: "restart" })}
+        />
+      ) : (
+        <></>
+      )}
+
       <div className="p-6 h-full bg-dark-navy">
         <div className="flex items-center">
           <div className="flex-1">
-            <Logo className="h-8" />
+            <IconLogo className="h-8" />
           </div>
           <div className="flex-1 text-center">
             <div className="inline-block w-auto bg-semi-dark-navy h-10 px-4 uppercase text-silver rounded-md shadow-button-sm shadow-[#10212A]">
               <div className="text-sm flex items-center justify-center gap-2 h-full w-full pb-1">
                 {state.turn === "X" ? (
-                  <LetterX className="h-4 text-silver" />
+                  <IconLetterX className="h-4 text-silver" />
                 ) : (
                   <></>
                 )}
                 {state.turn === "O" ? (
-                  <LetterO className="h-4 text-silver" />
+                  <IconLetterO className="h-4 text-silver" />
                 ) : (
                   <></>
                 )}
@@ -136,9 +158,10 @@ export default function Game(props: Props) {
               type="button"
               title="restart"
               className="ml-auto bg-silver h-10 w-10 flex items-center justify-center rounded-md shadow-button-sm shadow-[#6B8997]"
+              onClick={() => setVisibilityRestartModal(true)}
             >
               <div className="pb-1">
-                <Restart className="h-4" />
+                <IconRestart className="h-4" />
               </div>
             </button>
           </div>
@@ -153,8 +176,16 @@ export default function Game(props: Props) {
             >
               <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
                 <div className="pb-2">
-                  {state.grid[0] === "X" ? <LetterX className="h-10" /> : <></>}
-                  {state.grid[0] === "O" ? <LetterO className="h-10" /> : <></>}
+                  {state.grid[0] === "X" ? (
+                    <IconLetterX className="h-10" />
+                  ) : (
+                    <></>
+                  )}
+                  {state.grid[0] === "O" ? (
+                    <IconLetterO className="h-10" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </button>
@@ -167,8 +198,16 @@ export default function Game(props: Props) {
             >
               <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
                 <div className="pb-2">
-                  {state.grid[1] === "X" ? <LetterX className="h-10" /> : <></>}
-                  {state.grid[1] === "O" ? <LetterO className="h-10" /> : <></>}
+                  {state.grid[1] === "X" ? (
+                    <IconLetterX className="h-10" />
+                  ) : (
+                    <></>
+                  )}
+                  {state.grid[1] === "O" ? (
+                    <IconLetterO className="h-10" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </button>
@@ -181,8 +220,16 @@ export default function Game(props: Props) {
             >
               <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
                 <div className="pb-2">
-                  {state.grid[2] === "X" ? <LetterX className="h-10" /> : <></>}
-                  {state.grid[2] === "O" ? <LetterO className="h-10" /> : <></>}
+                  {state.grid[2] === "X" ? (
+                    <IconLetterX className="h-10" />
+                  ) : (
+                    <></>
+                  )}
+                  {state.grid[2] === "O" ? (
+                    <IconLetterO className="h-10" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </button>
@@ -195,8 +242,16 @@ export default function Game(props: Props) {
             >
               <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
                 <div className="pb-2">
-                  {state.grid[3] === "X" ? <LetterX className="h-10" /> : <></>}
-                  {state.grid[3] === "O" ? <LetterO className="h-10" /> : <></>}
+                  {state.grid[3] === "X" ? (
+                    <IconLetterX className="h-10" />
+                  ) : (
+                    <></>
+                  )}
+                  {state.grid[3] === "O" ? (
+                    <IconLetterO className="h-10" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </button>
@@ -209,8 +264,16 @@ export default function Game(props: Props) {
             >
               <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
                 <div className="pb-2">
-                  {state.grid[4] === "X" ? <LetterX className="h-10" /> : <></>}
-                  {state.grid[4] === "O" ? <LetterO className="h-10" /> : <></>}
+                  {state.grid[4] === "X" ? (
+                    <IconLetterX className="h-10" />
+                  ) : (
+                    <></>
+                  )}
+                  {state.grid[4] === "O" ? (
+                    <IconLetterO className="h-10" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </button>
@@ -223,8 +286,16 @@ export default function Game(props: Props) {
             >
               <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
                 <div className="pb-2">
-                  {state.grid[5] === "X" ? <LetterX className="h-10" /> : <></>}
-                  {state.grid[5] === "O" ? <LetterO className="h-10" /> : <></>}
+                  {state.grid[5] === "X" ? (
+                    <IconLetterX className="h-10" />
+                  ) : (
+                    <></>
+                  )}
+                  {state.grid[5] === "O" ? (
+                    <IconLetterO className="h-10" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </button>
@@ -237,8 +308,16 @@ export default function Game(props: Props) {
             >
               <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
                 <div className="pb-2">
-                  {state.grid[6] === "X" ? <LetterX className="h-10" /> : <></>}
-                  {state.grid[6] === "O" ? <LetterO className="h-10" /> : <></>}
+                  {state.grid[6] === "X" ? (
+                    <IconLetterX className="h-10" />
+                  ) : (
+                    <></>
+                  )}
+                  {state.grid[6] === "O" ? (
+                    <IconLetterO className="h-10" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </button>
@@ -251,8 +330,16 @@ export default function Game(props: Props) {
             >
               <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
                 <div className="pb-2">
-                  {state.grid[7] === "X" ? <LetterX className="h-10" /> : <></>}
-                  {state.grid[7] === "O" ? <LetterO className="h-10" /> : <></>}
+                  {state.grid[7] === "X" ? (
+                    <IconLetterX className="h-10" />
+                  ) : (
+                    <></>
+                  )}
+                  {state.grid[7] === "O" ? (
+                    <IconLetterO className="h-10" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </button>
@@ -265,8 +352,16 @@ export default function Game(props: Props) {
             >
               <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
                 <div className="pb-2">
-                  {state.grid[8] === "X" ? <LetterX className="h-10" /> : <></>}
-                  {state.grid[8] === "O" ? <LetterO className="h-10" /> : <></>}
+                  {state.grid[8] === "X" ? (
+                    <IconLetterX className="h-10" />
+                  ) : (
+                    <></>
+                  )}
+                  {state.grid[8] === "O" ? (
+                    <IconLetterO className="h-10" />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </button>
@@ -275,53 +370,27 @@ export default function Game(props: Props) {
             <div>
               <div className="bg-light-blue h-16 flex flex-col items-center justify-center rounded-lg">
                 <div className="text-sm text-dark-navy">X (YOU)</div>
-                <div className="text-xl font-bold text-dark-navy">14</div>
+                <div className="text-xl font-bold text-dark-navy">
+                  {state.winner.filter((x) => x === "X").length}
+                </div>
               </div>
             </div>
             <div>
               <div className="bg-silver h-16 flex flex-col items-center justify-center rounded-lg">
                 <div className="text-sm text-dark-navy">TIES</div>
-                <div className="text-xl font-bold text-dark-navy">32</div>
+                <div className="text-xl font-bold text-dark-navy">
+                  {state.winner.filter((x) => x === undefined).length}
+                </div>
               </div>
             </div>
             <div>
               <div className="bg-light-yellow h-16 flex flex-col items-center justify-center rounded-lg">
                 <div className="text-sm text-dark-navy">O (CPU)</div>
-                <div className="text-xl font-bold text-dark-navy">11</div>
+                <div className="text-xl font-bold text-dark-navy">
+                  {state.winner.filter((x) => x === "O").length}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* modal win/lose */}
-      <div className="hidden inset-0 absolute z-20 flex items-center">
-        <div className="bg-dark-navy flex-1 flex flex-col items-center px-12 pt-10 pb-12">
-          <div className="text-silver text-sm uppercase font-bold tracking-wider">
-            Oh no, you lose...
-          </div>
-
-          <div className="mt-4 flex items-center justify-center text-2xl gap-2">
-            <LetterO className="h-8 text-light-yellow" />
-            <div className="text-light-yellow uppercase font-bold tracking-wider">
-              takes the round
-            </div>
-          </div>
-
-          <div className="mt-6 flex gap-4">
-            <button
-              type="button"
-              className="bg-silver font-bold px-4 rounded-lg shadow-button-sm shadow-[#6B8997] text-dark-navy h-[3.25rem]"
-              onClick={(e) => navigate("/")}
-            >
-              QUIT
-            </button>
-            <button
-              type="button"
-              className="bg-light-yellow font-bold px-4 rounded-lg shadow-button-sm shadow-[#CC8B13] text-dark-navy h-[3.25rem]"
-            >
-              NEXT ROUND
-            </button>
           </div>
         </div>
       </div>
