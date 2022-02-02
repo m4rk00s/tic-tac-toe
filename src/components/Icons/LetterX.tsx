@@ -4,7 +4,7 @@ interface Props extends React.SVGAttributes<SVGElement> {
   color?: string;
 }
 
-export default function LetterX(props: Props) {
+export default function IconLetterX(props: Props): JSX.Element {
   return (
     <svg
       {...props}

@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import IconX from "./components/icons/LetterX";
-import IconO from "./components/icons/LetterO";
+import IconLetterO from "./components/icons/LetterO";
+import IconLetterX from "./components/icons/LetterX";
 
-function App(): JSX.Element {
+export default function App(): JSX.Element {
   const navigate = useNavigate();
   const [playerMark, setPlayerMark] = useState("X");
 
   return (
     <div className="h-full bg-dark-navy flex flex-col items-center justify-center gap-8 px-6">
       <div className="flex gap-2">
-        <IconX className="h-8 w-8" />
-        <IconO className="h-8 w-8" />
+        <IconLetterX className="h-8 w-8" />
+        <IconLetterO className="h-8 w-8" />
       </div>
 
       <div className="shadow-button bg-semi-dark-navy text-silver rounded-xl w-full p-6 flex flex-col justify-center items-center">
@@ -28,7 +28,7 @@ function App(): JSX.Element {
             }
             onClick={(e) => setPlayerMark("X")}
           >
-            <IconX
+            <IconLetterX
               className={
                 "h-8 w-8 mx-auto " +
                 (playerMark === "X" ? "text-dark-navy " : "text-silver ")
@@ -44,7 +44,7 @@ function App(): JSX.Element {
             }
             onClick={(e) => setPlayerMark("O")}
           >
-            <IconO
+            <IconLetterO
               className={
                 "h-8 w-8 mx-auto " +
                 (playerMark === "O" ? "text-dark-navy " : "text-silver ")
@@ -71,5 +71,3 @@ function App(): JSX.Element {
     </div>
   );
 }
-
-export default App;

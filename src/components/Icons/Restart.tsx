@@ -1,6 +1,8 @@
 import React from "react";
 
-export default function Restart(props: React.SVGAttributes<SVGElement>) {
+export default function IconRestart(
+  props: React.SVGAttributes<SVGElement>
+): JSX.Element {
   return (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
       <path

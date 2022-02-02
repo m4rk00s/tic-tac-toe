@@ -1,7 +1,7 @@
 import React from "react";
+import { Player } from "../routes/Game";
 import IconLetterO from "./icons/LetterO";
 import IconLetterX from "./icons/LetterX";
-import { Player } from "../routes/Game";
 import Modal from "./Modal";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
   onClickNextRound: () => void;
 }
 
-export default function Result(props: Props) {
+export default function Result(props: Props): JSX.Element {
   return (
     <Modal
       header={

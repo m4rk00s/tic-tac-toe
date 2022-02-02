@@ -5,7 +5,7 @@ interface Props {
   footer?: JSX.Element;
 }
 
-export default function Modal(props: Props) {
+export default function Modal(props: Props): JSX.Element {
   return (
     <>
       <div className="inset-0 absolute z-10 h-full w-full bg-black mix-blend-normal opacity-50"></div>

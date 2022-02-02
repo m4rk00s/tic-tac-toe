@@ -6,7 +6,7 @@ interface Props {
   onClickYes: () => void;
 }
 
-export default function Restart(props: Props) {
+export default function Restart(props: Props): JSX.Element {
   return (
     <Modal
       header={
