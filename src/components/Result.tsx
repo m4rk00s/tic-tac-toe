@@ -1,7 +1,7 @@
 import React from "react";
 import { Player } from "../routes/Game";
-import IconLetterO from "./icons/LetterO";
-import IconLetterX from "./icons/LetterX";
+import IconLetterO from "./icons/IconLetterO";
+import IconLetterX from "./icons/IconLetterX";
 import Modal from "./Modal";
 
 interface Props {

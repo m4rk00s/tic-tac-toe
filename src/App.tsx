@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import IconLetterO from "./components/icons/LetterO";
-import IconLetterX from "./components/icons/LetterX";
+import IconLetterO from "./components/icons/IconLetterO";
+import IconLetterX from "./components/icons/IconLetterX";
 
 export default function App(): JSX.Element {
   const navigate = useNavigate();

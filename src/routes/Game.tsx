@@ -2,10 +2,10 @@ import React, { useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Result from "../components/Result";
 import Restart from "../components/Restart";
-import IconLogo from "../components/icons/Logo";
-import IconLetterX from "../components/icons/LetterX";
-import IconLetterO from "../components/icons/LetterO";
-import IconRestart from "../components/icons/Restart";
+import IconLogo from "../components/icons/IconLogo";
+import IconLetterX from "../components/icons/IconLetterX";
+import IconLetterO from "../components/icons/IconLetterO";
+import IconRestart from "../components/icons/IconRestart";
 
 type Grid = [
   Player?,
