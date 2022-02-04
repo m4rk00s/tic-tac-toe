@@ -131,13 +131,11 @@ export default function Game(props: Props) {
         <></>
       )}
 
-      <div className="p-6 h-full bg-dark-navy">
-        <div className="flex items-center">
-          <div className="flex-1">
+      <div className="h-full bg-dark-navy flex md:items-center justify-center">
+        <div className="p-6 max-w-lg flex-1">
+          <div className="w-full grid grid-cols-tic-tac-toe gap-5 items-center justify-center">
             <IconLogo className="h-8" />
-          </div>
-          <div className="flex-1 text-center">
-            <div className="inline-block w-auto bg-semi-dark-navy h-10 px-4 uppercase text-silver rounded-md shadow-button-sm shadow-[#10212A]">
+            <div className="inline-block w-auto bg-semi-dark-navy h-14 px-4 uppercase text-silver rounded-md shadow-button-sm shadow-[#10212A]">
               <div className="text-sm flex items-center justify-center gap-2 h-full w-full pb-1">
                 {state.turn === "X" ? (
                   <IconLetterX className="h-4 text-silver" />
@@ -152,12 +150,10 @@ export default function Game(props: Props) {
                 <span>turn</span>
               </div>
             </div>
-          </div>
-          <div className="flex-1">
             <button
               type="button"
               title="restart"
-              className="ml-auto bg-silver h-10 w-10 flex items-center justify-center rounded-md shadow-button-sm shadow-[#6B8997]"
+              className="ml-auto bg-silver h-14 w-14 flex items-center justify-center rounded-md shadow-button-sm shadow-[#6B8997]"
               onClick={() => setVisibilityRestartModal(true)}
             >
               <div className="pb-1">
@@ -165,229 +161,60 @@ export default function Game(props: Props) {
               </div>
             </button>
           </div>
-        </div>
-        <div className="mt-16">
-          <div className="w-full grid grid-cols-tic-tac-toe gap-5">
-            <button
-              type="button"
-              title="0"
-              disabled={state.grid[0] !== undefined}
-              onClick={(e) => dispatch({ type: "player-move", chosenTile: 0 })}
-            >
-              <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
-                <div className="pb-2">
-                  {state.grid[0] === "X" ? (
-                    <IconLetterX className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                  {state.grid[0] === "O" ? (
-                    <IconLetterO className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
-            </button>
+          <div className="md:mt-5 mt-16">
+            <div className="w-full grid grid-cols-tic-tac-toe gap-5">
+              {state.grid.map((cell, index) => {
+                return (
+                  <button
+                    key={index}
+                    type="button"
+                    title={`button ${index + 1}`}
+                    disabled={state.grid[index] !== undefined}
+                    onClick={(e) =>
+                      dispatch({ type: "player-move", chosenTile: index })
+                    }
+                  >
+                    <div className="aspect-square w-full flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
+                      <div className="pb-2">
+                        {state.grid[index] === "X" ? (
+                          <IconLetterX className="md:h-16 h-12" />
+                        ) : (
+                          <></>
+                        )}
+                        {state.grid[index] === "O" ? (
+                          <IconLetterO className="md:h-16 h-12" />
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
 
-            <button
-              type="button"
-              title="1"
-              disabled={state.grid[1] !== undefined}
-              onClick={(e) => dispatch({ type: "player-move", chosenTile: 1 })}
-            >
-              <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
-                <div className="pb-2">
-                  {state.grid[1] === "X" ? (
-                    <IconLetterX className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                  {state.grid[1] === "O" ? (
-                    <IconLetterO className="h-10" />
-                  ) : (
-                    <></>
-                  )}
+              {/* result */}
+              <div>
+                <div className="bg-light-blue h-16 flex flex-col items-center justify-center rounded-lg">
+                  <div className="text-sm text-dark-navy">X (YOU)</div>
+                  <div className="text-xl font-bold text-dark-navy">
+                    {state.winner.filter((x) => x === "X").length}
+                  </div>
                 </div>
               </div>
-            </button>
-
-            <button
-              type="button"
-              title="2"
-              disabled={state.grid[2] !== undefined}
-              onClick={(e) => dispatch({ type: "player-move", chosenTile: 2 })}
-            >
-              <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
-                <div className="pb-2">
-                  {state.grid[2] === "X" ? (
-                    <IconLetterX className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                  {state.grid[2] === "O" ? (
-                    <IconLetterO className="h-10" />
-                  ) : (
-                    <></>
-                  )}
+              <div>
+                <div className="bg-silver h-16 flex flex-col items-center justify-center rounded-lg">
+                  <div className="text-sm text-dark-navy">TIES</div>
+                  <div className="text-xl font-bold text-dark-navy">
+                    {state.winner.filter((x) => x === undefined).length}
+                  </div>
                 </div>
               </div>
-            </button>
-
-            <button
-              type="button"
-              title="3"
-              disabled={state.grid[3] !== undefined}
-              onClick={(e) => dispatch({ type: "player-move", chosenTile: 3 })}
-            >
-              <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
-                <div className="pb-2">
-                  {state.grid[3] === "X" ? (
-                    <IconLetterX className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                  {state.grid[3] === "O" ? (
-                    <IconLetterO className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              title="4"
-              disabled={state.grid[4] !== undefined}
-              onClick={(e) => dispatch({ type: "player-move", chosenTile: 4 })}
-            >
-              <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
-                <div className="pb-2">
-                  {state.grid[4] === "X" ? (
-                    <IconLetterX className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                  {state.grid[4] === "O" ? (
-                    <IconLetterO className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              title="5"
-              disabled={state.grid[5] !== undefined}
-              onClick={(e) => dispatch({ type: "player-move", chosenTile: 5 })}
-            >
-              <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
-                <div className="pb-2">
-                  {state.grid[5] === "X" ? (
-                    <IconLetterX className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                  {state.grid[5] === "O" ? (
-                    <IconLetterO className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              title="6"
-              disabled={state.grid[6] !== undefined}
-              onClick={(e) => dispatch({ type: "player-move", chosenTile: 6 })}
-            >
-              <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
-                <div className="pb-2">
-                  {state.grid[6] === "X" ? (
-                    <IconLetterX className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                  {state.grid[6] === "O" ? (
-                    <IconLetterO className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              title="7"
-              disabled={state.grid[7] !== undefined}
-              onClick={(e) => dispatch({ type: "player-move", chosenTile: 7 })}
-            >
-              <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
-                <div className="pb-2">
-                  {state.grid[7] === "X" ? (
-                    <IconLetterX className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                  {state.grid[7] === "O" ? (
-                    <IconLetterO className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              title="8"
-              disabled={state.grid[8] !== undefined}
-              onClick={(e) => dispatch({ type: "player-move", chosenTile: 8 })}
-            >
-              <div className="w-24 h-24 flex items-center justify-center bg-semi-dark-navy rounded-lg shadow-button shadow-[#10212A]">
-                <div className="pb-2">
-                  {state.grid[8] === "X" ? (
-                    <IconLetterX className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                  {state.grid[8] === "O" ? (
-                    <IconLetterO className="h-10" />
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </div>
-            </button>
-
-            {/* result */}
-            <div>
-              <div className="bg-light-blue h-16 flex flex-col items-center justify-center rounded-lg">
-                <div className="text-sm text-dark-navy">X (YOU)</div>
-                <div className="text-xl font-bold text-dark-navy">
-                  {state.winner.filter((x) => x === "X").length}
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="bg-silver h-16 flex flex-col items-center justify-center rounded-lg">
-                <div className="text-sm text-dark-navy">TIES</div>
-                <div className="text-xl font-bold text-dark-navy">
-                  {state.winner.filter((x) => x === undefined).length}
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="bg-light-yellow h-16 flex flex-col items-center justify-center rounded-lg">
-                <div className="text-sm text-dark-navy">O (CPU)</div>
-                <div className="text-xl font-bold text-dark-navy">
-                  {state.winner.filter((x) => x === "O").length}
+              <div>
+                <div className="bg-light-yellow h-16 flex flex-col items-center justify-center rounded-lg">
+                  <div className="text-sm text-dark-navy">O (CPU)</div>
+                  <div className="text-xl font-bold text-dark-navy">
+                    {state.winner.filter((x) => x === "O").length}
+                  </div>
                 </div>
               </div>
             </div>

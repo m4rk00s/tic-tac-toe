@@ -17,19 +17,19 @@ export default function Result(props: Props): JSX.Element {
       header={
         props.winner !== undefined ? (
           <div className="flex flex-col items-center">
-            <div className="text-silver text-sm uppercase font-bold tracking-wider">
+            <div className="text-silver text-sm md:text-base uppercase font-bold tracking-wider">
               {props.winner === props.user ? "You won!" : "Oh no, you lost..."}
             </div>
 
-            <div className="mt-4 flex items-center justify-center text-2xl gap-2">
+            <div className="mt-4 flex items-center justify-center text-2xl md:text-4xl md:gap-6 gap-2">
               {props.winner === "O" ? (
-                <IconLetterO className="h-8 text-light-yellow" />
+                <IconLetterO className="h-8 md:h-16 text-light-yellow" />
               ) : (
                 <></>
               )}
 
               {props.winner === "X" ? (
-                <IconLetterX className="h-8 text-light-yellow" />
+                <IconLetterX className="h-8 md:h-16 text-light-yellow" />
               ) : (
                 <></>
               )}
